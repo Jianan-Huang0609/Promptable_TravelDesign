@@ -8,7 +8,7 @@
 ## 📌 在线访问
 
 - **Prompt 生成器首页**  
-  👉 [打开 Prompt 生成器](https://jianan-huang0609.github.io/Promptable_TravelDesign/index.html)
+  👉 [打开 Prompt 生成器](https://jianan-huang0609.github.io/Promptable_TravelDesign)
 
 - **示例成品：新加坡 4天3晚 Tropical 主题**  
   👉 [查看新加坡示例](https://jianan-huang0609.github.io/Promptable_TravelDesign/SINGAPORE_v4.html)
