@@ -29,16 +29,20 @@
    - 预算范围  
    - 偏好标签（美食优先 / 出片优先 / 不赶行程 / 海岛 / 夜景 / 购物 / 亲子）  
 
-3. **风格与外观**  
+3. **风格与外观**
+4. 视频
    - 主题（Bento-Tech / Tropical / Sunset / Minimal）  
    - 背景（渐变 / 细腻纹理 / 纯白）  
    - Emoji 使用量（少量 / 适中 / 偏多）
 
-4. **手打补充要求**  
+5. **手打补充要求**  
    - 写你的特殊需求（例：周六安排圣淘沙整天、不用图片改 bullet 要点）
 
-5. **生成 Prompt 并复制**  
+6. **生成 Prompt 并复制**  
    - 点击「生成 Prompt」→ 粘贴到 ChatGPT / Cursor  
    - 将生成的 HTML 保存到本地或放到本仓库中展示
 
 ---
+
+##  视频讲解
+[![观看视频](https://img.youtube.com/vi/VIDEO_ID/0.jpg)]([https://www.youtube.com/watch?v=VIDEO_ID](http://xhslink.com/m/7jxkASjq11b))
