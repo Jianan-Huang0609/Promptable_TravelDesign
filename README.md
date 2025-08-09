@@ -47,9 +47,3 @@
    - 将生成的 HTML 保存到本地或放到本仓库中展示
 
 ---
-
-## 📂 项目结构
-Promptable_TravelDesign/
-├─ index.html # Prompt 生成器
-├─ SINGAPORE_v4.html # 新加坡示例页面
-└─ README.md # 本说明文件
