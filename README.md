@@ -13,11 +13,6 @@
 - **示例成品：新加坡 4天3晚 Tropical 主题**  
   👉 [查看新加坡示例](https://jianan-huang0609.github.io/Promptable_TravelDesign/SINGAPORE_v4.html)
 
----
-
-## 🖼 新加坡示例预览
-
-<iframe src="https://jianan-huang0609.github.io/Promptable_TravelDesign/SINGAPORE_v4.html" width="100%" height="600" style="border:1px solid #ccc;"></iframe>
 
 ---
 
