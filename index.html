@@ -12,7 +12,7 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:#f8faff;color:var(--ink);
-    font-family:"Noto Sans SC","Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial}
+    font-family:"Noto Sans SC","Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial}
   .wrap{max-width:1100px;margin:0 auto;padding:20px}
   h1{margin:8px 0 6px;font-size:28px;color:#0b1220;letter-spacing:.2px}
   .sub{color:var(--muted);font-size:13px;margin-bottom:10px}
@@ -45,6 +45,13 @@
   .section-title{font-weight:800;margin:0 0 8px 0}
   .divider{height:1px;background:linear-gradient(90deg,rgba(25,118,255,.0),rgba(25,118,255,.2),rgba(25,118,255,.0));margin:12px 0}
   .link{color:#1976ff;text-decoration:none}
+
+  /* CTA styles for example link */
+  .cta{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+       background:linear-gradient(90deg, var(--blue), #5aa3ff); color:#fff !important; text-decoration:none;
+       box-shadow:0 6px 18px rgba(25,118,255,.26); font-weight:700}
+  .cta:hover{filter:brightness(.98)}
+
 </style>
 </head>
 <body>
@@ -55,6 +62,7 @@
   </div>
 
   <div class="toolbar">
+    <a class="cta" href="https://jianan-huang0609.github.io/Promptable_TravelDesign/SINGAPORE_v4.html" target="_blank" rel="noopener">🇸🇬 新加坡攻略_例子</a>
     <button class="btn ghost" id="example">一键示例：新加坡 4D3N</button>
     <button class="btn warn" id="clearAll">清空所有 + 清除缓存</button>
     <button class="btn" id="reset">重置为默认</button>
@@ -153,6 +161,8 @@
       <button class="btn" id="copy">复制</button>
       <button class="btn" id="exportTxt">导出 .txt</button>
       <button class="btn" id="exportMd">导出 .md</button>
+      <button class="btn" id="exportHtml">导出 HTML（单页）</button>
+      <button class="btn warn" id="resetForm">重置填写</button>
       <span class="hint">将生成的 Prompt 粘贴到 ChatGPT / Cursor。内容会自动保存。</span>
     </div>
     <div id="output"></div>
@@ -309,7 +319,7 @@ ${linkText || '（无外部参考链接）'}
 - 技术：使用 Motion One CDN 做滚动淡入，Font Awesome 图标
 - ${styleSpec(theme, emoji)}背景：${bg}；
 - 地图/餐厅按钮：在卡片内以小图标链接呈现
-- 代码自检：检查并替换任何失效的图片或链接
+- 代码自检：检查并替换任何失效的图片或链接；如生成结果的“每日行程卡片”为空或少于 3 张，需提示并补充默认卡片（避免导出的 HTML 页面没有内容）；如出现外链 JS 失败，需自动降级为 CSS 过渡且“初始不隐藏内容”
 
 最后附：本地运行与 GitHub Pages 部署步骤。
 
@@ -324,7 +334,7 @@ ${manual || '（无）'}
 
 // ----- export & clipboard -----
 function downloadFile(name, content){
-  const blob = new Blob([content], {type:'text/plain;charset=utf-8'});
+  const blob = new Blob(['\ufeff'+content], {type:'text/plain;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href=url; a.download=name; a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 500);
@@ -408,6 +418,273 @@ document.getElementById('example').addEventListener('click', fillExample);
 document.getElementById('clearAll').addEventListener('click', clearAll);
 document.getElementById('reset').addEventListener('click', resetDefaults);
 document.getElementById('reload').addEventListener('click', ()=>location.reload());
+
+
+// ---------- robust site export (Motion dual CDN + local fallback + content checks) ----------
+function htmlEncode(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function currentDateRangeStr(){
+  const sY=startYear.value,sM=startMonth.value,sD=startDay.value;
+  const eY=endYear.value,eM=endMonth.value,eD=endDay.value;
+  return `${sY}-${sM}-${sD} 至 ${eY}-${eM}-${eD}`;
+}
+function getMultiValues(containerId){
+  return Array.from(document.querySelectorAll('#'+containerId+' .btn.active[data-multi]')).map(b=>b.dataset.value);
+}
+function getSingleValue(group){
+  const btn = document.querySelector('.btn.active[data-group="'+group+'"]');
+  return btn ? btn.dataset.value : "";
+}
+
+// Build cards from minimal inputs; if none, insert warning/placeholder (never empty)
+function buildCardsFromInputs(){
+  const links = document.getElementById('links').value.trim().split('\n').filter(Boolean);
+  const loc = (document.getElementById('location').value.trim() || '旅行地');
+  const cards = [];
+  // minimal three cards (AM/PM/Night)
+  cards.push({
+    title:'上午｜城市起步',
+    meta:'步行热身 · 咖啡/早餐',
+    bullets:[`餐：沿线口碑1 / 口碑2`,`交通：地铁/步行`],
+    map:'#'
+  });
+  cards.push({
+    title:'下午｜招牌地标',
+    meta:'主景点打卡 · 适合拍照',
+    bullets:[`餐：沿线口碑1 / 口碑2`,`交通：地铁/步行/打车`],
+    map:'#'
+  });
+  cards.push({
+    title:'晚上｜夜景与美食',
+    meta:'蓝调时刻 · 城市夜景',
+    bullets:[`餐：夜宵口碑1 / 口碑2`,`交通：地铁/步行/打车`],
+    map:'#'
+  });
+  // If user provided at least one link, surface it on the first card
+  if(links[0]){
+    cards[0].bullets.unshift(`参考：${links[0]}`);
+  }
+  return cards;
+}
+
+function siteHTMLTemplate({date, location, budget, tags, linksArr, bg, theme, emoji, cards}){
+  const bgCss = bg==='Texture'
+    ? `background: radial-gradient(1200px 600px at 10% 0%, #e0fff6 0%, #fff 30%), repeating-linear-gradient(45deg,#f9fefc,#f9fefc 8px,#f6fbf8 8px,#f6fbf8 16px);`
+    : bg==='Plain'
+      ? `background:#fff;`
+      : `background: radial-gradient(1200px 600px at 10% 0%, #e0fff6 0%, #fff 30%), linear-gradient(135deg, #f8fff9 0%, #fff 40%, #fff0 40%), linear-gradient(180deg, #e6fff9 0%, #fff 60%);`;
+  const palette = theme==='Sunset' ? {teal:'#ff9a76', coral:'#ff6f61', ink:'#3a1b14'} :
+                  theme==='Bento-Tech' ? {teal:'#1976ff', coral:'#5aa3ff', ink:'#0b1220'} :
+                  theme==='Minimal' ? {teal:'#2b2b2b', coral:'#777', ink:'#111'} :
+                  {teal:'#18b8a2', coral:'#ff6f61', ink:'#08312f'}; // Tropical default
+  const tagsHTML = (tags||[]).map(t=>`<span class="tag">${htmlEncode(t)}</span>`).join("");
+  const linksHTML = (linksArr||[]).map(l=>`<li><a href="${l}" target="_blank" rel="noopener">${htmlEncode(l)}</a></li>`).join("");
+
+  // Ensure at least 3 cards
+  let _cards = Array.isArray(cards) ? cards : [];
+  if(_cards.length < 3){ _cards = buildCardsFromInputs(); }
+
+  const cardsHTML = _cards.map(c=>`
+      <article class="card" data-fade>
+        <h3>${htmlEncode(c.title||'行程卡片')}</h3>
+        <div class="meta">${htmlEncode(c.meta||'亮点')}</div>
+        <ul class="bullets">${(c.bullets||[]).map(b=>`<li>${htmlEncode(b)}</li>`).join('')}</ul>
+        <div class="btns">
+          <a class="btn" href="${c.map||'#'}"><i class="fa-solid fa-map-location-dot"></i> 地图</a>
+        </div>
+      </article>
+  `).join("");
+
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${htmlEncode(location||'我的旅行')} · 单页攻略</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{ --teal:${palette.teal}; --coral:${palette.coral}; --card:#ffffffee; --ink:${palette.ink}; }
+    *{box-sizing:border-box}
+    body{ margin:0; color:var(--ink); font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Emoji; ${bgCss} background-attachment:fixed; }
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.2) blur(6px);
+      background:linear-gradient(90deg, #ffffffbb, #ffffffdd); border-bottom:1px solid #00000010; }
+    nav{ max-width:1080px;margin:0 auto;display:flex;gap:16px;align-items:center;padding:10px 12px }
+    nav a{ color:#055; text-decoration:none; font-weight:600; padding:6px 10px;border-radius:999px }
+    nav a:hover{ background:#00000008 }
+    .hero{ max-width:1080px;margin:18px auto 6px;padding:0 12px }
+    .pill{ display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:#ffffffaa;border:1px solid #00000010}
+    h1{ margin:8px 0 0;font-size:28px }
+    .grid{ max-width:1080px;margin:4px auto;padding:0 12px;display:grid;grid-template-columns:1fr;gap:12px }
+    .tips{ background:var(--card);border-radius:18px;padding:12px;box-shadow:0 4px 16px #0000000f;border:1px solid #00000010 }
+    .section-title{ display:flex;align-items:center;gap:10px;margin:12px 0 6px }
+    .tag{ display:inline-block;font-size:12px;margin-right:6px;padding:4px 8px;border-radius:999px;background:#f6fffd;border:1px solid #00000010 }
+    .timeline{ max-width:1080px;margin:6px auto;padding:0 12px }
+    .day{ margin:14px 0 }
+    .lane{ display:flex;align-items:center;gap:10px;margin:6px 0 }
+    .dot{ width:10px;height:10px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 4px #ffefe9 }
+    .bar{ flex:1;height:4px;border-radius:3px;background:linear-gradient(90deg, var(--teal), var(--coral)) }
+    .cards{ display:flex;gap:12px;overflow:auto;padding-bottom:4px;scroll-snap-type:x mandatory }
+    .card{ scroll-snap-align:start;min-width:320px;max-width:320px;background:var(--card);border:1px solid #00000010;border-radius:18px;padding:12px;box-shadow:0 6px 20px #00000012 }
+    .card h3{ margin:0 0 4px }
+    .meta{ font-size:12px;opacity:.8 }
+    .bullets{ margin:6px 0 0;padding-left:18px }
+    .btns{ display:flex;gap:10px;margin-top:8px }
+    .btn{ display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;border:1px solid #00000012;background:#fff;text-decoration:none;color:#064e4b;font-weight:600 }
+    .btn:hover{ background:#f7fffd }
+    footer{ max-width:1080px;margin:20px auto;padding:0 12px 40px;color:#055 }
+    @media (min-width:768px){ h1{font-size:34px} .card{min-width:360px;max-width:360px}}
+    /* Motion fallback: initial content is visible; only after setup we add .prepare */
+    [data-fade]{ will-change: transform, opacity; }
+    [data-fade].prepare { opacity:0; transform:translateY(14px); }
+    .reveal { opacity:1 !important; transform:none !important; transition:opacity .6s ease-out, transform .6s ease-out; }
+    .warn{background:#fff7ed;border:1px solid #ffd7ba;padding:10px 12px;border-radius:10px;margin:8px 0;color:#7a2e0d}
+  
+  /* CTA styles for example link */
+  .cta{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+       background:linear-gradient(90deg, var(--blue), #5aa3ff); color:#fff !important; text-decoration:none;
+       box-shadow:0 6px 18px rgba(25,118,255,.26); font-weight:700}
+  .cta:hover{filter:brightness(.98)}
+
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="#prep"><i class="fa-solid fa-clipboard-check"></i> 行前准备</a>
+    <a href="#plan"><i class="fa-solid fa-route"></i> 每日行程</a>
+    <a href="#tips"><i class="fa-solid fa-lightbulb"></i> Tips</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <span class="pill"><i class="fa-solid fa-location-dot"></i> ${htmlEncode(location||'目的地')} · ${htmlEncode(date||'日期未填')} · ${htmlEncode(budget||'预算未填')}</span>
+  <h1>${htmlEncode(location||'目的地')} 旅行攻略 ｜ 主题：${htmlEncode(theme)} ｜ Emoji：${htmlEncode(emoji)}</h1>
+  <div class="meta">此页面为<strong>安全降级版</strong>（Motion 双 CDN + 本地降级）；任何外链失败都不会空白。</div>
+</section>
+
+<section id="prep" class="grid">
+  <div class="tips" data-fade>
+    <div class="section-title"><i class="fa-solid fa-clipboard-check"></i><h2>行前 To-Do</h2></div>
+    <div>${tagsHTML||''}</div>
+    <ul class="bullets">
+      <li>护照/签证/入境卡（按目的地要求）。</li>
+      <li>通信：eSIM 或机场办卡；离线地图。</li>
+      <li>交通/支付：本地交通卡与移动支付准备。</li>
+    </ul>
+  </div>
+  <div class="tips" data-fade>
+    <div class="section-title"><i class="fa-solid fa-link"></i><h2>参考链接</h2></div>
+    <ul class="bullets">${linksHTML||'<li class="warn">（暂无参考链接）</li>'}</ul>
+  </div>
+</section>
+
+<section id="plan" class="timeline" data-fade>
+  <div class="day">
+    <div class="lane"><div class="dot"></div><div class="bar"></div></div>
+    <h2>每日行程</h2>
+    <div class="cards">
+      ${cardsHTML}
+    </div>
+  </div>
+</section>
+
+<section id="tips" class="grid">
+  <div class="tips" data-fade>
+    <div class="section-title"><i class="fa-solid fa-camera-retro"></i><h2>拍照/天气</h2></div>
+    <ul class="bullets">
+      <li>清晨与日落黄金时段更好看；遇雨改室内馆。</li>
+      <li>轻薄速干衣物 + 小折叠伞 + 充电宝。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 旅行单页 · 由 Promptable TravelDesign 生成</p>
+</footer>
+
+<script>
+// Motion One 双CDN + 本地降级；初始不隐藏
+(function(){
+  const toPrepare = document.querySelectorAll('[data-fade]');
+  function enablePrepare(){ toPrepare.forEach(el=>el.classList.add('prepare')); }
+  function revealFallback(){ toPrepare.forEach(el=>el.classList.add('reveal')); }
+
+  function setupWithMotion(){
+    enablePrepare();
+    const els = document.querySelectorAll('[data-fade]');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          if (window.motion && motion.animate){
+            motion.animate(e.target, {opacity:[0,1], y:[20,0]}, {duration:0.6, easing:"ease-out"});
+            e.target.classList.add('reveal');
+          } else {
+            e.target.classList.add('reveal');
+          }
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:0.08});
+    els.forEach(el=>io.observe(el));
+  }
+
+  function loadScript(src, timeout=4500){
+    return new Promise((resolve, reject)=>{
+      const s=document.createElement('script');
+      s.src=src; s.async=true; s.crossOrigin="anonymous";
+      let done=false;
+      const timer=setTimeout(()=>{ if(!done){ done=true; s.remove(); reject(new Error('timeout:'+src)); } }, timeout);
+      s.onload=()=>{ if(!done){ done=true; clearTimeout(timer); resolve(); } };
+      s.onerror=()=>{ if(!done){ done=true; clearTimeout(timer); reject(new Error('error:'+src)); } };
+      document.head.appendChild(s);
+    });
+  }
+
+  const primary = "https://unpkg.com/motion@10.16.2/dist/motion.min.js";
+  const backup  = "https://cdn.jsdelivr.net/npm/motion@10.16.2/dist/motion.min.js";
+
+  loadScript(primary).catch(()=>loadScript(backup)).then(setupWithMotion).catch(revealFallback);
+  setTimeout(()=>{ if(!window.motion){ revealFallback(); } }, 6000);
+})();
+<\/script>
+</body>
+</html>`;
+}
+
+function exportHTML(){
+  const date = currentDateRangeStr();
+  const location = document.getElementById('location').value.trim() || '我的旅行';
+  const budget = document.getElementById('budget').value.trim() || '预算未填';
+  const tags = getMultiValues('tags');
+  const linksArr = document.getElementById('links').value.trim().split('\\n').filter(Boolean);
+  const theme = getSingleValue('theme') || 'Tropical';
+  const bg = getSingleValue('bg') || 'Gradient';
+  const emoji = getSingleValue('emoji') || '适中';
+
+  // Build minimal safe cards
+  const cards = buildCardsFromInputs();
+
+  const html = siteHTMLTemplate({date, location, budget, tags, linksArr, bg, theme, emoji, cards});
+  const name = `${location.replace(/\\s+/g,'_')}_site.html`;
+  const blob = new Blob(['\\ufeff'+html], {type:'text/html;charset=utf-8'}); // BOM for Windows
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 500);
+}
+
+// Hook buttons
+document.getElementById('exportHtml').addEventListener('click', exportHTML);
+document.getElementById('resetForm').addEventListener('click', ()=>{
+  // Clear inputs only (preserve theme/bg)
+  ['location','budget','links','linkDesc','manual'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('#tags .btn').forEach(b=>b.classList.remove('active'));
+  // Reset dates to next month 4-7
+  const now=new Date(); let y=now.getFullYear(), m=now.getMonth()+2; if(m>12){m=1;y++;}
+  startYear.value=String(y); startMonth.value=String(m).padStart(2,'0'); fillDays(startDay, y, m); startDay.value='04';
+  endYear.value=String(y); endMonth.value=String(m).padStart(2,'0'); fillDays(endDay, y, m); endDay.value='07';
+  document.getElementById('output').textContent='';
+  saveState();
+});
 
 // ----- init -----
 const now=new Date();
