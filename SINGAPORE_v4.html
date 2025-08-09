@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>新加坡 4天3晚 · Tropical ver.</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/motion@10.16.4/dist/motion.min.js"></script>
+  <style>
+    :root{
+      --teal:#0fb9b1;      /* 主色：海岛青绿 */
+      --coral:#ff7f6a;     /* 强调色：珊瑚橙 */
+      --ink:#0b1220;
+      --muted:#607087;
+      --card:#ffffff;
+      --gap:18px;
+      --radius:18px;
+      --shadow:0 12px 30px rgba(15,185,177,.18);
+      --track:#e2f7f5;
+      --accent:#0fb9b1;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;color:var(--ink);
+      font-family:"Noto Sans SC","Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial
+    }
+    a{color:var(--accent);text-decoration:none}
+    /* 🏝️ 背景：热带渐变 + 细微纹理 */
+    body{
+      background:
+        radial-gradient(1600px 800px at 80% -10%, rgba(255,227,180,.65), rgba(255,255,255,0)),
+        radial-gradient(1200px 600px at -10% 10%, rgba(15,185,177,.18), rgba(255,255,255,0)),
+        linear-gradient(180deg, #fff 0%, #f7fffd 50%, #ffffff 100%);
+    }
+    .texture:before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+      background-image:
+        radial-gradient(rgba(15,185,177,.06) 1px, transparent 1px),
+        radial-gradient(rgba(255,127,106,.06) 1px, transparent 1px);
+      background-size:22px 22px, 36px 36px;
+      background-position:0 0, 10px 14px;
+      mask-image:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.4));
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:24px}
+    .top{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.86);
+      backdrop-filter:blur(10px);border-bottom:1px solid #eef2f6}
+    .bar{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px}
+    .chip{padding:8px 14px;border-radius:999px;border:1px solid #b7efe9;color:#04635f;font-weight:700;background:rgba(15,185,177,.10)}
+    h1{font-size:30px;margin:18px 0 6px;letter-spacing:.3px}
+    .en-sub{font-size:14px;color:#3c6d7a;opacity:.95}
+    .sub{color:#567b86;font-size:14px;margin-top:4px}
+    .section{padding:28px 0}
+    .section .hd{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px}
+    .mini{font-size:12px;color:var(--muted)}
+    .badge{font-size:12px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid #b7efe9;color:#04635f}
+    .hero{
+      border-radius:22px;padding:18px 20px;
+      background:linear-gradient(135deg, rgba(15,185,177,.14), rgba(255,127,106,.12));
+      box-shadow:0 18px 40px rgba(4,99,95,.08);
+    }
+    .card{border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);overflow:hidden}
+    .pad{padding:16px}
+    .title{font-weight:800;font-size:18px;margin:2px 0 8px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .time{font-weight:800;color:var(--accent);letter-spacing:.2px}
+    .tag{font-size:12px;color:#04635f;background:rgba(15,185,177,.12);padding:4px 8px;border-radius:999px}
+    .desc{color:var(--muted);font-size:14px;line-height:1.65}
+    ul{margin:8px 0 0 18px;padding:0}
+    li{margin:6px 0;line-height:1.55}
+    .line{height:1px;background:linear-gradient(90deg,rgba(15,185,177,.0),rgba(15,185,177,.28),rgba(15,185,177,.0));margin:16px 0}
+    footer{margin:40px 0 60px;color:var(--muted);text-align:center}
+    /* 时间线 */
+    .timeline{position:relative;margin:18px 0 6px}
+    .timeline .track{height:8px;background:var(--track);border-radius:999px;position:relative;box-shadow:inset 0 0 0 1px #b7efe9}
+    .timeline .progress{position:absolute;height:8px;left:0;top:0;background:linear-gradient(90deg, var(--teal), var(--coral));border-radius:999px;width:100%}
+    .timeline .dots{position:relative;display:flex;justify-content:space-between;margin-top:10px}
+    .dot{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+    .dot .p{width:16px;height:16px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 8px rgba(15,185,177,.12), 0 2px 10px rgba(4,99,95,.15)}
+    .dot .lbl{font-size:12px;color:#2d5e69;text-align:center}
+    .dot .lbl strong{color:#0b1220}
+    /* 横向滑动卡片 */
+    .hscroll{display:flex;gap:var(--gap);overflow-x:auto;padding:6px 6px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+    .hscroll::-webkit-scrollbar{height:8px}
+    .hscroll::-webkit-scrollbar-thumb{background:#c6f4ee;border-radius:999px}
+    .hcard{flex:0 0 320px;scroll-snap-align:start;position:relative}
+    @media (max-width:480px){.hcard{flex-basis:260px}}
+    .hcard .title{min-height:44px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .emoji{font-size:18px;margin-right:6px}
+    /* 彩带分割线 */
+    .ribbon{height:8px;border-radius:999px;background:linear-gradient(90deg, var(--teal), var(--coral));opacity:.9;margin:8px 0 2px}
+  </style>
+</head>
+<body class="texture">
+  <div class="top">
+    <div class="wrap bar">
+      <a class="chip" href="#tl">🗺️ 时间线</a>
+      <a class="chip" href="#d0">🛬 D0</a>
+      <a class="chip" href="#d1">🏙️ D1</a>
+      <a class="chip" href="#d2">🏖️ D2</a>
+      <a class="chip" href="#d3">🧳 D3</a>
+      <a class="chip" href="#tips">💡 Tips</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header class="hero" style="padding-top:6px">
+      <div class="badge">🌴 Singapore · 4D3N</div>
+      <h1>新加坡 4天3晚 · 横向时间线 + 卡片行程</h1>
+      <div class="en-sub">City Deep Dive + Sentosa Chill · Thu Arrival 16:00 → Sun Departure 16:10</div>
+      <div class="sub">周五/周六整天 + 周日上午机动 · 不累出片 · 地铁友好</div>
+      <div class="ribbon"></div>
+    </header>
+
+    <!-- 时间线 -->
+    <section id="tl" class="section">
+      <div class="hd">
+        <h2>行程总览 🗓️</h2>
+        <span class="mini">D0 Arrival & Jewel · D1 Citywalk · D2 Sentosa · D3 Chill & Fly</span>
+      </div>
+      <div class="timeline">
+        <div class="track">
+          <div class="progress"></div>
+        </div>
+        <div class="dots">
+          <div class="dot"><div class="p"></div><div class="lbl"><strong>D0 Thu</strong><br/>🛬 16:00</div></div>
+          <div class="dot"><div class="p"></div><div class="lbl"><strong>D1 Fri</strong><br/>🏙️ City</div></div>
+          <div class="dot"><div class="p"></div><div class="lbl"><strong>D2 Sat</strong><br/>🏖️ Sentosa</div></div>
+          <div class="dot"><div class="p"></div><div class="lbl"><strong>D3 Sun</strong><br/>✈️ 16:10</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- D0 -->
+    <section id="d0" class="section">
+      <div class="hd"><h2>🛬 D0 · 周四 · 抵达 + Jewel 热身</h2><span class="mini">抵达→入境/EZ‑Link→Jewel→进城入住→夜宵</span></div>
+      <div class="hscroll">
+        <div class="card hcard pad">
+          <div class="row"><span class="time">16:00</span><span class="tag">Arrival</span></div>
+          <div class="title"><span class="emoji">🛂</span>入境 + 购买 EZ‑Link</div>
+          <ul>
+            <li>机场购 EZ‑Link：12 SGD（7 余额 + 5 押金，可退）</li>
+            <li>开通 eSIM / Wi‑Fi，下载地铁图</li>
+          </ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">17:00</span><span class="tag">Jewel</span></div>
+          <div class="title"><span class="emoji">💧</span>Rain Vortex 室内瀑布</div>
+          <ul>
+            <li>L1 正中 0.5× 广角出片</li>
+            <li>顺路 Pokémon Center 伴手礼</li>
+          </ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">18:30</span><span class="tag">Downtown</span></div>
+          <div class="title"><span class="emoji">🚇</span>地铁进市区 · 办入住</div>
+          <ul>
+            <li>30 分钟到武吉士/克拉码头</li>
+            <li>放行李，小憩</li>
+          </ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">20:00</span><span class="tag">Supper</span></div>
+          <div class="title"><span class="emoji">🍢</span>老巴刹：沙爹 + 海南鸡饭</div>
+          <ul>
+            <li>夜风 + 美食，早点休息倒时差</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- D1 -->
+    <section id="d1" class="section">
+      <div class="hd"><h2>🏙️ D1 · 周五 · 市区经典 + 网红 Citywalk</h2><span class="mini">Fort Canning → 彩虹警署 → 克拉码头 → 鱼尾狮 → 滨海湾花园 → 擎天树/水舞 → 海鲜</span></div>
+      <div class="hscroll">
+        <div class="card hcard pad">
+          <div class="row"><span class="time">08:30</span><span class="tag">Fort Canning</span></div>
+          <div class="title"><span class="emoji">🌿</span>福康宁「树洞」空景</div>
+          <ul><li>开门即到，0.5× 广角仰拍</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">09:30</span><span class="tag">MCI</span></div>
+          <div class="title"><span class="emoji">🌈</span>旧禧街警察局 · 彩虹外墙</div>
+          <ul><li>五彩木窗，步行可达河岸</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">10:30</span><span class="tag">Clarke Quay</span></div>
+          <div class="title"><span class="emoji">🍞</span>亚坤咖椰吐司早午餐</div>
+          <ul><li>咖椰吐司 + 半熟蛋 + 咖啡</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">12:00</span><span class="tag">Merlion</span></div>
+          <div class="title"><span class="emoji">🦁</span>鱼尾狮公园 · 顺光</div>
+          <ul><li>正对滨海湾拍照 · 更清晰</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">13:00</span><span class="tag">Marina Bay Sands</span></div>
+          <div class="title"><span class="emoji">🛍️</span>金沙 The Shoppes 午餐 + 冷气</div>
+          <ul><li>室内运河 & 美食广场</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">15:00</span><span class="tag">Gardens by the Bay</span></div>
+          <div class="title"><span class="emoji">🌫️</span>云雾林 + 花穹（双馆）</div>
+          <ul><li>冷气舒适 · 取景多</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">17:30</span><span class="tag">Supertree</span></div>
+          <div class="title"><span class="emoji">🌇</span>擎天树空中走廊 · 日落</div>
+          <ul><li>黄金时刻，夜景灯光开</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">19:00</span><span class="tag">Show</span></div>
+          <div class="title"><span class="emoji">✨</span>金沙灯光水舞《Wonder Full》</div>
+          <ul><li>免费场，湾岸观看</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">20:30</span><span class="tag">Dinner</span></div>
+          <div class="title"><span class="emoji">🦀</span>牛车水：龙海鲜螃蟹王</div>
+          <ul><li>黑胡椒蟹 / 辣椒蟹（建议预约）</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- D2 -->
+    <section id="d2" class="section">
+      <div class="hd"><h2>🏖️ D2 · 周六 · 圣淘沙「不累、出片、省钱」</h2><span class="mini">怡丰城入岛 → 海洋馆 → 斜坡滑车 → Coastes → Palawan 海滩 → Tanjong 日落 → 光之步道</span></div>
+      <div class="hscroll">
+        <div class="card hcard pad">
+          <div class="row"><span class="time">08:45</span><span class="tag">VivoCity</span></div>
+          <div class="title"><span class="emoji">🚝</span>怡丰城 3F 捷运入岛</div>
+          <ul><li>单程 4 SGD · 回程走光之步道免费</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">09:15</span><span class="tag">S.E.A.</span></div>
+          <div class="title"><span class="emoji">🐠</span>海洋馆（新馆区）</div>
+          <ul><li>慢逛 2h · 大观景窗合影</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">11:30</span><span class="tag">Luge</span></div>
+          <div class="title"><span class="emoji">🛼</span>天际线斜坡滑车（3 次票）</div>
+          <ul><li>Dragon 线 ×2 更爽 · 现场更划算</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">13:00</span><span class="tag">Lunch</span></div>
+          <div class="title"><span class="emoji">🍔</span>Coastes（西乐索海滩）</div>
+          <ul><li>海景位 · 汉堡/披萨/冰饮</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">14:30</span><span class="tag">Palawan</span></div>
+          <div class="title"><span class="emoji">🌴</span>海滩吊桥 + 歪脖椰子树</div>
+          <ul><li>免费摆渡车 · 沙滩拍照点多</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">17:00</span><span class="tag">Sunset</span></div>
+          <div class="title"><span class="emoji">🍹</span>Tanjong Beach Club · 日落小酌</div>
+          <ul><li>Happy Hour · 换拖鞋拍照更出片</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">19:00</span><span class="tag">Walk</span></div>
+          <div class="title"><span class="emoji">🌉</span>心之音光之步道 → 怡丰城</div>
+          <ul><li>350 m 跨海栈道 · 夜风舒服</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">20:30</span><span class="tag">Optional</span></div>
+          <div class="title"><span class="emoji">🍸</span>克拉码头酒吧街小酌</div>
+          <ul><li>不赶行程，自在放松</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- D3 -->
+    <section id="d3" class="section">
+      <div class="hd"><h2>🧳 D3 · 周日 · 上午机动打卡 + 机场扫货</h2><span class="mini">国家美术馆 → CHIJMES → 彩绘楼/竹脚中心 → 返机场 → Jewel 采购 → 退税/登机</span></div>
+      <div class="hscroll">
+        <div class="card hcard pad">
+          <div class="row"><span class="time">08:00</span><span class="tag">Check-out</span></div>
+          <div class="title"><span class="emoji">🧳</span>退房 · 行李寄存</div>
+          <ul><li>轻装出发，回程再取</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">08:30</span><span class="tag">National Gallery</span></div>
+          <div class="title"><span class="emoji">🖼️</span>国家美术馆 · 冷气回血</div>
+          <ul><li>东南亚艺术常设，建筑空间好拍</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">10:30</span><span class="tag">CHIJMES</span></div>
+          <div class="title"><span class="emoji">⛪</span>赞美广场 · 白色哥特回廊</div>
+          <ul><li>08:30–11:00 人少好拍空景</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">11:30</span><span class="tag">Little India</span></div>
+          <div class="title"><span class="emoji">🎨</span>彩绘楼 & 竹脚中心午餐</div>
+          <ul><li>印度煎饼 / Masala Tea</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">12:30</span><span class="tag">Airport</span></div>
+          <div class="title"><span class="emoji">🚇</span>地铁直达樟宜（≈35 分钟）</div>
+          <ul><li>准备护照/登机提示</li></ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">13:00</span><span class="tag">Jewel</span></div>
+          <div class="title"><span class="emoji">🛍️</span>补货清单</div>
+          <ul>
+            <li>Bengawan Solo 斑斓蛋糕</li>
+            <li>Mr Coconut 椰子冰沙</li>
+            <li>Kane Mochi 麻薯冰淇淋</li>
+          </ul>
+        </div>
+        <div class="card hcard pad">
+          <div class="row"><span class="time">14:30</span><span class="tag">Departure</span></div>
+          <div class="title"><span class="emoji">✈️</span>退税 + 托运 → 16:10 登机</div>
+          <ul><li>至少提前 2 小时到安检口</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <section id="tips" class="section">
+      <div class="hd"><h2>💡 备忘 & 拍照 Tips</h2></div>
+      <div class="row" style="gap:18px;flex-wrap:wrap">
+        <div class="card pad" style="flex:1 1 320px;min-width:280px">
+          <div class="title">🚇 交通 / 支付</div>
+          <ul>
+            <li>EZ‑Link 机场可买：12 SGD（7 余额 + 5 押金），离境可退</li>
+            <li>支付宝「惠出境」10:00 领券，Coastes、亚坤常可用</li>
+          </ul>
+        </div>
+        <div class="card pad" style="flex:1 1 320px;min-width:280px">
+          <div class="title">🏝️ 圣淘沙省钱</div>
+          <ul>
+            <li>斜坡滑车 3 次票现场价≈28 SGD，比网购便宜</li>
+            <li>带橡皮筋扎头发，走光之步道回城免费</li>
+          </ul>
+        </div>
+        <div class="card pad" style="flex:1 1 320px;min-width:280px">
+          <div class="title">📸 拍照位</div>
+          <ul>
+            <li>树洞/CHIJMES：08:30 开门后人少</li>
+            <li>Jewel L1 正中 0.5× 广角显腿长</li>
+          </ul>
+        </div>
+      </div>
+      <footer>© 2025 Singapore Trip · Tropical Theme · Emoji Friendly</footer>
+    </section>
+  </div>
+
+  <script>
+    const { animate, inView } = Motion;
+    document.querySelectorAll(".hcard").forEach(el=>{
+      inView(el, ({target})=>{
+        animate(target, {opacity:[0,1], y:[20,0]}, {duration:.45, easing:"ease-out"});
+      }, { margin: "-10% 0px -10% 0px" });
+    });
+  </script>
+</body>
+</html>
