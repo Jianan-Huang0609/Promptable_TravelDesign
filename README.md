@@ -44,9 +44,9 @@
 
 ---
 
-## 🎥 67 我发现了一篇小红书笔记
+## 🎥 小红书教程
 
-[![点击查看视频](https://github.com/Jianan-Huang0609/Promptable_TravelDesign/raw/main/assets/xhs-preview.jpg)](http://xhslink.com/m/7jxkASjq11b "67 我发现了一篇小红书笔记，快来看吧 😆")
+[![点击查看视频](https://github.com/Jianan-Huang0609/Promptable_TravelDesign/raw/main/assets/WechatIMG327.jpg)](http://xhslink.com/m/7jxkASjq11b "67 我发现了一篇小红书笔记，快来看吧 😆")
 
 > 😆 复制本条信息，打开【小红书】App查看精彩内容！  
 > 5Icexd2o3Sr  
