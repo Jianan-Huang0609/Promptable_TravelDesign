@@ -1,32 +1,53 @@
-# Promptable TravelDesign
+# Promptable Travel Design · 旅行网站 Prompt 生成器
 
-按钮化选择 + 手动补充的旅行 **Prompt 生成器**，以及一个 **新加坡 4D3N 示例页面**。
+这是一个可以快速生成 **旅行行程 Prompt** 并转化为 **可视化 HTML 网页** 的工具。  
+你可以用它把自己在小红书、Google Maps、旅游博客等地方收集的行程信息，变成一个漂亮的旅行攻略网站。
 
-- 首页：`index.html`（生成器，含日期下拉、主题/背景/emoji 选择、导出 .txt/.md、一键清空/重置/示例填充）
-- 示例：`/examples/singapore-4d3n.html`（横向时间线 + 横滑卡片，Tropical 度假风）
+---
 
-## 使用方法
+## 📌 在线示例
 
-1. 打开 **index.html**：选择日期、目的地、预算，点选偏好与外观；在「手打补充」里加入你的额外要求。
-2. 点 **生成 Prompt**，复制到 ChatGPT/Cursor；按提示生成 HTML 单页行程。
-3. 将生成的 HTML 保存到本仓库的 **`/examples/`** 目录，即可作为案例展示。
+- **Prompt 生成器首页**  
+  👉 https://jianan-huang0609.github.io/Promptable_TravelDesign/
 
-## GitHub Pages 部署
+- **示例成品：新加坡 4天3晚 Tropical 主题**  
+  👉 https://jianan-huang0609.github.io/Promptable_TravelDesign/examples/singapore-4d3n.html
 
-1. 将本项目 push 到仓库：`Jianan-Huang0609/Promptable_TravelDesign`
-2. 进入仓库 **Settings → Pages**：
-   - Source: `Deploy from a branch`
-   - Branch: `main`（或你的默认分支），Folder: `/ (root)`
-3. 保存后访问：  
-   - 首页（生成器）：`https://jianan-huang0609.github.io/Promptable_TravelDesign/`  
-   - 示例页：`https://jianan-huang0609.github.io/Promptable_TravelDesign/examples/singapore-4d3n.html`
+---
 
-## 本地开发
+## 🚀 使用流程
 
-- 直接双击 `index.html` 在浏览器打开即可。
-- 生成器使用 `localStorage` 记忆你的选择。
-- 无需构建/打包；所有依赖均为 CDN（Font Awesome, Motion One）。
+1. **收集素材**  
+   - 例如在小红书找到喜欢的旅行攻略、餐厅推荐、拍照路线。  
+   - 在 App 右上角点击「分享」，选择「复制链接」。  
+   - 在 Prompt 生成器的「外部参考链接」区，**一行一个**地粘贴这些链接。  
+   - （小技巧：在「参考链接简述」里，写一句该链接的亮点，比如“圣淘沙亲子路线”“滨海湾日落拍照点”）
 
-## 许可
+2. **填写基础信息**  
+   - 时间（下拉选择 年/月/日）  
+   - 目的地（如：新加坡 + 民丹岛）  
+   - 预算范围（如：¥5000-8000/人）  
+   - 偏好标签（美食优先 / 出片优先 / 不赶行程 / 海岛 / 夜景 / 购物 / 亲子）  
 
-仅用于个人/学习目的；示例页面未引用受版权限制的图片。
+3. **风格与外观**  
+   - 主题（Bento-Tech / Tropical / Sunset / Minimal）  
+   - 背景（渐变 / 细腻纹理 / 纯白）  
+   - Emoji 使用量（少量 / 适中 / 偏多）
+
+4. **手打补充要求**  
+   - 写你希望行程满足的特殊规则，例如：
+     ```
+     - 周六安排圣淘沙整天
+     - 每天加 2 家沿线口碑餐厅
+     - 行程卡片横向滑动 + 时间线
+     - 不用图片，改成要点 bullet
+     ```
+
+5. **生成 Prompt 并复制**  
+   - 点击「生成 Prompt」→ 复制到 ChatGPT / Cursor  
+   - 得到的 HTML 代码可保存到本地，或放入 `/examples/` 作为新案例
+
+---
+
+## 📂 项目结构
+
