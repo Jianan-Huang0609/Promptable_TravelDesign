@@ -10,9 +10,9 @@
 - **Prompt 生成器首页**  
   👉 [打开 Prompt 生成器](https://jianan-huang0609.github.io/Promptable_TravelDesign)
 
-- **示例成品：新加坡 4天3晚 Tropical 主题**  
+- **示例成品：新加坡 4天3晚& 济州岛3天2晚**  
   👉 [查看新加坡示例](https://jianan-huang0609.github.io/Promptable_TravelDesign/SINGAPORE_v4.html)
-
+  👉 [查看新加坡示例](https://jianan-huang0609.github.io/Promptable_TravelDesign/Jeju.html)
 
 ---
 
