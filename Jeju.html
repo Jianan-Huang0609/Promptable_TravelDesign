@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JEJU ISLAND · 3D2N</title>
+<meta name="description" content="济州岛 3 天 2 夜 | 海岛度假 · 快乐优先 | 三栏布局 | 蓝→橘渐变 | 自适应时间标签" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#eaf6ff;
+    --bg2:#ffe9d6;
+    --text:#0b2a4a;
+    --muted:#4c6783;
+    --chip:#fff;
+    --ring:rgba(9,35,73,.12);
+    --accent:#ff8a34;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans SC","PingFang SC",sans-serif;
+    color:var(--text);
+    background: linear-gradient(90deg,var(--bg1),var(--bg2));
+    background-attachment: fixed;
+  }
+  a{color:inherit}
+  .container{max-width:1160px;margin:0 auto;padding:20px 20px 56px}
+  /* top nav */
+  .topbar{
+    position:sticky;top:0;z-index:9;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(90deg,rgba(234,246,255,.8),rgba(255,233,214,.8));
+    border-bottom:1px solid var(--ring);
+  }
+  .topbar .inner{display:flex;align-items:center;gap:14px;justify-content:space-between;max-width:1160px;margin:0 auto;padding:10px 20px}
+  .brand{font-weight:800;letter-spacing:.5px}
+  nav a{
+    text-decoration:none;font-weight:600;font-size:13px;color:#0b2a4a;
+    padding:8px 10px;border-radius:8px;border:1px solid transparent
+  }
+  nav a:hover{border-color:var(--ring);background:#fff}
+  /* hero */
+  .hero{
+    margin-top:18px;border:1px solid var(--ring);border-radius:20px;
+    background: radial-gradient(1200px 500px at 10% 0%, rgba(10,105,255,.08), transparent 60%),
+                radial-gradient(900px 440px at 90% 20%, rgba(255,138,52,.10), transparent 60%),
+                linear-gradient(90deg, rgba(255,255,255,.7), rgba(255,255,255,.35));
+    padding:28px 24px;box-shadow:0 20px 60px rgba(10,30,70,.10);
+  }
+  .hero h1{margin:0 0 6px;font-size:28px;letter-spacing:.5px}
+  .hero .sub{color:var(--muted);font-size:14px;margin-top:6px}
+  .hero .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;background:var(--chip);
+    border:1px solid var(--ring);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:600;
+    box-shadow:0 6px 20px rgba(10,30,70,.05);
+  }
+  /* sections */
+  section{margin-top:26px}
+  section .card{
+    border:1px solid var(--ring);border-radius:18px;padding:18px 16px;background:#fff;box-shadow:0 12px 40px rgba(10,30,70,.08);
+  }
+  h2{font-size:18px;margin:0 0 12px}
+  h3{font-size:16px;margin:14px 0 10px}
+  .muted{color:var(--muted)}
+
+  /* checklist grid */
+  .table-like{display:grid;grid-template-columns:120px 1fr;gap:10px 14px}
+  .table-like .th{font-weight:700;color:#053064}
+
+  /* 3-column days */
+  .day-wrap{margin-top:18px}
+  .track{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .day{
+    background:#ffffffd6;border:1px solid var(--ring);border-radius:20px;padding:16px 14px;
+    box-shadow:0 12px 40px rgba(10,30,70,.08);
+  }
+  .day h3{margin:0 0 10px;color:#063168}
+
+  /* timeline with tighter, auto-fit time badges */
+  .timeline{display:flex;flex-direction:column;gap:10px}
+  .item{
+    display:grid;grid-template-columns:auto 1fr;align-items:start;
+    gap:10px;padding:10px 12px;border:1px solid var(--ring);border-radius:14px;background:#fff;
+  }
+  .time{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:2px 7px;line-height:1;font-weight:800;font-variant-numeric: tabular-nums;
+    white-space:nowrap;color:#063168;background:linear-gradient(90deg,#eef6ff,#fff2e7);
+    border:1px solid var(--ring);border-radius:999px;box-shadow:0 1px 6px rgba(10,30,70,.04);
+  }
+  .title{font-weight:700}
+  .desc{color:var(--muted);font-size:13px;margin-top:4px;line-height:1.5}
+  .leg{display:inline-flex;gap:6px;align-items:center;margin-top:6px}
+  .leg .chip{padding:4px 8px;font-size:12px}
+  .leg .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(255,138,52,.15)}
+
+  /* cost: list style */
+  .price-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .price-list li{display:grid;grid-template-columns: 1fr auto;align-items:baseline;gap:12px;padding:10px 12px;border:1px solid var(--ring);border-radius:12px;background:#fff}
+  .price-list .name{font-weight:600;color:#063168}
+  .price-list .amt{font-weight:800;color:#063168;white-space:nowrap}
+  .price-total{margin-top:8px;display:flex;justify-content:flex-end;gap:10px;font-weight:800;color:#063168}
+
+  /* animations */
+  [data-animate]{opacity:0;transform:translateY(12px);animation:fadeUp .8s ease forwards}
+  [data-animate].d1{animation-delay:.05s}
+  [data-animate].d2{animation-delay:.12s}
+  [data-animate].d3{animation-delay:.18s}
+  @keyframes fadeUp{to{opacity:1;transform:none}}
+
+  /* responsive */
+  @media (max-width:1024px){.track{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:768px){.track{grid-template-columns:1fr} .table-like{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="inner">
+      <div class="brand">JEJU · 3D2N</div>
+      <nav>
+        <a href="#d1">① 酒店</a>
+        <a href="#d2">② 行前</a>
+        <a href="#d3">③ 行程</a>
+        <a href="#d4">④ 费用</a>
+        <a href="#d5">⑤ 退税</a>
+        <a href="#d6">⑥ 打卡</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="hero" data-animate>
+      <h1>JEJU ISLAND · 3D2N</h1>
+      <div class="sub">时间｜2024.10.10 – 10.12 · 标签｜海岛度假 · 快乐优先</div>
+      <div class="meta" style="margin-top:12px">
+        <span class="chip">🧭 路线紧凑</span>
+        <span class="chip">📸 出片友好</span>
+        <span class="chip">💙 清新蓝 → 橘渐变</span>
+      </div>
+    </section>
+
+    <!-- ① 酒店选择 -->
+    <section id="d1" data-animate class="d1">
+      <div class="card">
+        <h2>🏨 ① 酒店选择建议｜莲洞 & 市厅区域</h2>
+        <div>推荐酒店：Whistle Lark / Astar Hotel</div>
+        <ul>
+          <li>📍 地段：莲洞或济州市厅商圈，步行至 Olive Young、七星街、保健路仅 5–10 分钟</li>
+          <li>🚕 机场打车约 15 min / ₩12,000</li>
+          <li>🛏 双人间 ¥450–500/晚，含早餐</li>
+        </ul>
+        <div class="note">*若更换酒店，此处可直接替换文案；布局自适应不影响其他区块。</div>
+      </div>
+    </section>
+
+    <!-- ② 行前 48 小时 -->
+    <section id="d2" data-animate class="d2">
+      <div class="card">
+        <h2>⏱ ② 行前 48 小时 Checklist（极简版）</h2>
+        <div class="table-like">
+          <div class="th">证件</div><div>护照、春秋电子登机牌、国际驾照翻译件</div>
+          <div class="th">通讯</div><div>eSIM（韩国 5 天 15 GB）￥36</div>
+          <div class="th">支付</div><div>₩200,000 现金 + 支付宝 / 银联</div>
+          <div class="th">交通</div><div>Kakao T 绑定支付宝、T‑money 备用</div>
+          <div class="th">行李</div><div>薄外套 / 防晒 / 德标插头 / 20,000mAh 充电宝</div>
+          <div class="th">预订</div><div>免税店返点登记（韩游网）</div>
+        </div>
+        <div class="note">小提醒：下载 Kakao T、Naver Map；离线保存登机牌及酒店英文地址。</div>
+      </div>
+    </section>
+
+    <!-- ③ 正式行程：三栏布局 -->
+    <section id="d3" data-animate class="d3 day-wrap">
+      <h2>🗓 ③ 正式行程安排</h2>
+      <div class="track">
+        <!-- Day 1 -->
+        <div class="day">
+          <h3>Day 1｜10.10（周五）咸德玩水 + 夜市</h3>
+          <div class="timeline">
+            <div class="item">
+              <div class="time">07:40</div>
+              <div>
+                <div class="title">浦东出发 ✈️ → 10:05 抵达济州</div>
+                <div class="desc">春秋航班；到达后过检取行李。</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">10:30</div>
+              <div>
+                <div class="title">Kakao T → 酒店</div>
+                <div class="desc">寄存行李 & 简单洗漱</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚕 约 15′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">11:30</div>
+              <div>
+                <div class="title">午餐｜Donsadon 黑猪肉烤肉（Google 4.1/5 · 2,369 评）</div>
+                <div class="desc">建议提前电话拿号；主打黑猪五花。</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">12:30</div>
+              <div>
+                <div class="title">前往咸德海水浴场</div>
+                <div class="desc">Kakao T 约 40 分钟</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚕 约 40′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">13:00–15:30</div>
+              <div>
+                <div class="title">水上项目 @ LeadersClub</div>
+                <div class="desc">半潜艇 40′ ₩30,000 或 浮潜 1h（含装备）₩40,000</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">15:30</div>
+              <div>
+                <div class="title">沙滩拍照 + Cafe Delmoondo（Google 4.1/5 · 4,656 评）</div>
+                <div class="desc">橙汁拿铁 ₩7,000；提供淋浴更衣。</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚶 5′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">18:00</div>
+              <div>
+                <div class="title">夜市晚餐｜BHC 炸鸡（具体分店评分视门店而定，建议到店确认）</div>
+                <div class="desc">便利店集中：GS25 / CU / 7‑11（步行 2–5′）</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚕 30′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">20:00</div>
+              <div>
+                <div class="title">回酒店休息</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">📸</div>
+              <div>
+                <div class="title">拍照机位</div>
+                <div class="desc">潜艇 / 浮潜 · 咸德果冻海 · 小狗咖啡落地窗</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day">
+          <h3>Day 2｜10.11（周六）牛岛骑行 + 日出峰 + 月汀里打卡</h3>
+          <div class="timeline">
+            <div class="item">
+              <div class="time">07:00</div>
+              <div>
+                <div class="title">出发前往城山港</div>
+                <div class="desc">打车 ≈ 1.5h，₩50,000（≈ ¥270）</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">08:30</div>
+              <div>
+                <div class="title">快艇环岛 30′</div>
+                <div class="desc">₩25,000 / 人</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">09:00</div>
+              <div>
+                <div class="title">牛岛电动四轮车环岛</div>
+                <div class="desc">免驾照，₩20,000 / 2h</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">12:00</div>
+              <div>
+                <div class="title">快艇返程 → 12:15 抵城山港</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">12:30</div>
+              <div>
+                <div class="title">港口午餐｜真鲷海鲜面（确认具体店名后补评分）</div>
+                <div class="desc">均价 ₩12,000；快速补能。</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">13:00–14:30</div>
+              <div>
+                <div class="title">城山日出峰</div>
+                <div class="desc">上 25′ · 拍 15′ · 下 20′</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">14:40</div>
+              <div>
+                <div class="title">打车 10′ → 涉地可支</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚕 10′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">14:50–15:50</div>
+              <div>
+                <div class="title">Cafe Mamas（确认具体门店后补评分） + 悬崖步道</div>
+                <div class="desc">玻璃房露台位 · 观景散步 1h</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">16:00</div>
+              <div>
+                <div class="title">打车 15′ → 月汀里咖啡（确认店名后补评分）</div>
+                <div class="desc">屋顶/露台景观位打卡</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚕 15′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">17:00</div>
+              <div>
+                <div class="title">返回酒店 / 晚餐</div>
+                <div class="desc">如：黄铜王盆排骨 ₩45,000 / 2人</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">19:30</div>
+              <div>
+                <div class="title">保健路扫街 / 回酒店</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">📸</div>
+              <div>
+                <div class="title">拍照机位</div>
+                <div class="desc">快艇船头俯拍 · Cafe Mamas · 日出峰 · 屋顶咖啡 · Prince Coffee 屋顶（备选）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day">
+          <h3>Day 3｜10.12（周日）市区扫货 + 伴手礼 + 晚班机返程</h3>
+          <div class="timeline">
+            <div class="item">
+              <div class="time">09:00</div>
+              <div>
+                <div class="title">早餐 & 退房寄存</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">09:30–14:00</div>
+              <div>
+                <div class="title">六大购物点（步行 ≤10′ / 打车 ≤₩5,000）</div>
+                <div class="desc">
+                  1️⃣ 新罗免税店 Jeju：Gentle Monster / Ralph Lauren / Adidas（返点 15%，部分现场提货）<br/>
+                  2️⃣ 乐天免税店 Jeju（步行 5′）：Prada 墨镜 / 拉夫劳伦童装补货<br/>
+                  3️⃣ 七星街 & 地下商场：Adidas Outlet（5–7 折）/ Champion / MLB / NB<br/>
+                  4️⃣ 保健路 FREITAG 街区：D&DEPARTMENT 家居香氛 / Kolon Sport / Aesop<br/>
+                  5️⃣ Olive Young 市厅旗舰：平价韩系墨镜 ₩39,900 / 男士护肤<br/>
+                  6️⃣ 东门市场：柑橘巧克力 ₩8,000 · 蜂蜜黄油杏仁 ₩6,500/kg · 橘子干茶包 ₩4,000
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">14:00</div>
+              <div>
+                <div class="title">午餐｜东门市场</div>
+                <div class="desc">海鲜煎饼 + 辣炒年糕 ₩15,000</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">14:30</div>
+              <div>
+                <div class="title">花生 Café（确认具体门店后补评分）</div>
+                <div class="desc">花生橘子冰淇淋 ₩5,500</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">16:30</div>
+              <div>
+                <div class="title">回酒店取行李</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">17:00</div>
+              <div>
+                <div class="title">Kakao T → 济州机场</div>
+                <div class="leg"><span class="dot"></span><span class="chip">🚕 20′</span></div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">18:00</div>
+              <div>
+                <div class="title">退税 & 提货</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">21:30</div>
+              <div>
+                <div class="title">春秋航班返程</div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="time">📸</div>
+              <div>
+                <div class="title">拍照机位</div>
+                <div class="desc">新罗 GM 镜墙 · FREITAG 彩箱 · 保健路街头 · 东门市场霓虹牌</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ④ 费用 -->
+    <section id="d4" data-animate class="d1">
+      <div class="card">
+        <h2>💰 ④ 费用预估（2 人）</h2>
+        <ul class="price-list">
+          <li><span class="name">住宿（2 晚）</span><span class="amt">¥900</span></li>
+          <li><span class="name">水上活动</span><span class="amt">¥300–400</span></li>
+          <li><span class="name">快艇 + 电动车</span><span class="amt">¥400</span></li>
+          <li><span class="name">打车交通</span><span class="amt">¥800</span></li>
+          <li><span class="name">餐食</span><span class="amt">¥600</span></li>
+          <li><span class="name">购物 & 礼品</span><span class="amt">自定</span></li>
+        </ul>
+        <div class="price-total">
+          <span>合计</span><span>≈ ¥2,000–2,300（不含购物）</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ 退税 & 提货 -->
+    <section id="d5" data-animate class="d2">
+      <div class="card">
+        <h2>🧾 ⑤ 退税 & 提货指南</h2>
+        <ul>
+          <li>✅ 退税标准：单笔满 ₩30,000 可退税，自助机 3 min 退至支付宝</li>
+          <li>📦 提货点：Gate 3 对面（新罗/乐天）
+            <ul>
+              <li>本土品牌：现场领取</li>
+              <li>非本土品牌：机场领取</li>
+            </ul>
+          </li>
+          <li>⏰ 营业时间：10:00–18:00，部分奢侈品牌周末不营业（建议上午采购）</li>
+        </ul>
+        <div class="note">流程：柜内结账 → Tax Refund 机扫码 → 完成退税 → 过检后至提货点领取。</div>
+      </div>
+    </section>
+
+    <!-- ⑥ 拍照打卡位 -->
+    <section id="d6" data-animate class="d3">
+      <div class="card">
+        <h2>📷 ⑥ 拍照打卡位全览</h2>
+        <table class="spots">
+          <thead>
+            <tr><th>Day</th><th>推荐机位</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Day 1</td><td>咸德果冻海 / 小狗咖啡落地窗</td></tr>
+            <tr><td>Day 2</td><td>快艇船头 / Prince Coffee 屋顶 / 日出峰火山口 / Cafe Mamas 玻璃房 / 屋顶咖啡</td></tr>
+            <tr><td>Day 3</td><td>新罗 GM 镜墙 / FREITAG 彩箱 / 保健路街头 / 东门市场霓虹牌</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="note" style="margin-top:10px">
+      <div class="container" style="padding:0">
+        <p>数据注：Donsadon 与 Cafe Delmoondo 的评分与评论数来自 Google 聚合（Wanderlog 抓取），更新时间 2025‑08‑10。</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
